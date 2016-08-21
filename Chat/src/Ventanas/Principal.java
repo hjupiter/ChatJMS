@@ -78,6 +78,11 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane2.setViewportView(txtAreaChat);
 
         btnEnviar.setText("Enviar");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -268,8 +273,13 @@ public class Principal extends javax.swing.JFrame {
             public void mouseClicked(MouseEvent e) {
                 txtAreaChat.setText("");
                 txtMsg.setText("");
-                chat = null;
-                System.out.println(chat);
+                if(chat!=null){
+                    try {
+                        chat.stopConecction();
+                    } catch (JMSException ex) {
+                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 tblEjemploMouseClicked(e);
             }
         });
@@ -279,7 +289,6 @@ public class Principal extends javax.swing.JFrame {
         String codigo,nombre,nombreSala;
         int row = jTableSalas.rowAtPoint(evt.getPoint());
         nombreSala = model.getValueAt(row,0).toString();
-        //System.out.println(nombreSala);
         try {    
             chat = new Chat(txtMsg, txtAreaChat, IdUsuario, btnEnviar,nombreSala);
         } catch (JMSException ex) {
@@ -299,11 +308,6 @@ public class Principal extends javax.swing.JFrame {
             Object datos[] = new Object[2];
             while(results.next()){
                 for(int i = 0; i<3;i++){
-                    /*if(i==1){
-                        String maquinaCodigo = results.getObject(i).toString();
-                        int c = Integer.parseInt(maquinaCodigo);
-                        datos[0] = c;
-                    }*/
                     if(i==2){
                         String nombreSala = results.getObject(i).toString();
                         datos[0] = nombreSala;
@@ -352,6 +356,15 @@ public class Principal extends javax.swing.JFrame {
         llenarTable();
     }//GEN-LAST:event_btnRefresacarSalasActionPerformed
 
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
+    
+    public void chat() throws JMSException{
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrearSala;

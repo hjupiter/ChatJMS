@@ -42,6 +42,8 @@ public class Chat {
     private JButton btnEnviar;
     private JTextField txtMsg;
     
+    private Connection connection;
+    
     public Chat(JTextField msg, JTextArea txtArea, String usuario, JButton btnEnviar,String nombreSala) throws JMSException {
         this.textArea = txtArea;
         this.Usuario = usuario;
@@ -60,7 +62,7 @@ public class Chat {
                     map.setString("texto", txtMsg.getText());
                     txtMsg.setText("");
                     producer.send(map);
-                    producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+                    //producer.setDeliveryMode(DeliveryMode.PERSISTENT);
                     System.out.println(map);
 
                 } catch (JMSException e1) {
@@ -74,36 +76,47 @@ public class Chat {
     
     
     private void activeMQ() throws JMSException {
-      ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-      Connection connection = connectionFactory.createConnection();
-      connection.start();
-      
-      session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+        connection = connectionFactory.createConnection();
+        connection.start();
+        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-      // Destination represents here our queue 'TESTQUEUE' on the
-      // JMS server. You don't have to do anything special on the
-      // server to create it, it will be created automatically.
-      Destination destination = session.createTopic(Sala);
+        // Destination represents here our queue 'TESTQUEUE' on the
+        // JMS server. You don't have to do anything special on the
+        // server to create it, it will be created automatically.
+        Destination destination = session.createTopic(Sala);
 
-      producer = session.createProducer(destination);
+        producer = session.createProducer(destination);
 
-      MessageConsumer consumer = session.createConsumer(destination);
-      consumer.setMessageListener(new MessageListener() {
+        MessageConsumer consumer = session.createConsumer(destination);
+        consumer.setMessageListener(new MessageListener() {
 
-         @Override
-         public void onMessage(Message message) {
-            if (message instanceof MapMessage) {
-               MapMessage map = (MapMessage) message;
-               try {
-                  String usuario = map.getString("usuario");
-                  String texto = map.getString("texto");
-                  textArea.append(usuario + ": " + texto + "\n");
-               } catch (JMSException e) {
-                  e.printStackTrace();
-               }
+            @Override
+            public void onMessage(Message message) {
+                if (message instanceof MapMessage) {
+                    MapMessage map = (MapMessage) message;
+                    try {
+                        String usuario = map.getString("usuario");
+                        String texto = map.getString("texto");
+                        textArea.append(usuario + ": " + texto + "\n");
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
+        });
+    }
 
-         }
-      });
-   }
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+    
+    public void stopConecction() throws JMSException{
+        connection.close();
+    }
 }
