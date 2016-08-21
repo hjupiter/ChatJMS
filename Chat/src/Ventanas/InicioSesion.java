@@ -1,5 +1,11 @@
 package Ventanas;
 
+import Conexion.Conexion;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Types;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -123,10 +129,38 @@ public class InicioSesion extends javax.swing.JFrame {
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
-        Principal p = new Principal(txtUsuario.getText());
-        p.setVisible(true);
-        p.setLocationRelativeTo(null);
-        this.dispose();
+        
+        if(!txtUsuario.getText().isEmpty()){
+            Conexion conexion =  new Conexion();
+            Connection conn = conexion.Conexion();
+            try {
+                CallableStatement crearUsuario = conn.prepareCall("{ ? = call CREAR_USUARIO( ? ) }");
+                crearUsuario.registerOutParameter(1, Types.BOOLEAN);
+                crearUsuario.setString(2,txtUsuario.getText().toUpperCase());
+                crearUsuario.execute();
+                Boolean res = crearUsuario.getBoolean(1);
+                System.out.println(res);
+                if(res){
+                    JOptionPane.showConfirmDialog(this, "Usuario Creado", "Mensaje",JOptionPane.CLOSED_OPTION);
+                    Principal p = new Principal(txtUsuario.getText());
+                    p.setVisible(true);
+                    p.setLocationRelativeTo(null);
+                    this.dispose();
+                }
+                else{
+                    JOptionPane.showConfirmDialog(this, "Ingreso Exitoso - Redirigiendolo a la sala de chat", "Mensaje",JOptionPane.CLOSED_OPTION);
+                    Principal p = new Principal(txtUsuario.getText());
+                    p.setVisible(true);
+                    p.setLocationRelativeTo(null);
+                    this.dispose();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            JOptionPane.showConfirmDialog(this, "Debe Escribir un nombre de usuario para usar en el chat", "Mensaje",JOptionPane.CLOSED_OPTION);
+        }
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     /**
