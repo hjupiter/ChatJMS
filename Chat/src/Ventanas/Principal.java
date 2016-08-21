@@ -49,9 +49,9 @@ public class Principal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txtAreaChat = new javax.swing.JTextArea();
+        txtMsg = new javax.swing.JTextField();
+        btnEnviar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         txtCrearSala = new javax.swing.JTextField();
         btnCrearSala = new javax.swing.JButton();
@@ -67,12 +67,12 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Chat", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
 
-        jTextArea1.setBackground(new java.awt.Color(240, 240, 240));
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txtAreaChat.setBackground(new java.awt.Color(240, 240, 240));
+        txtAreaChat.setColumns(20);
+        txtAreaChat.setRows(5);
+        jScrollPane2.setViewportView(txtAreaChat);
 
-        jButton1.setText("Enviar");
+        btnEnviar.setText("Enviar");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -82,9 +82,9 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jTextField1)
+                        .addComponent(txtMsg)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -95,8 +95,8 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtMsg)
+                    .addComponent(btnEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -261,10 +261,8 @@ public class Principal extends javax.swing.JFrame {
  
             @Override
             public void mouseClicked(MouseEvent e) {
-                //jPanelDatos.removeAll();
-                //jPanelDatos.revalidate();
-                //jPanelDatos.repaint();
-                //tblEjemploMouseClicked(e);
+                txtAreaChat.setText("");
+                txtMsg.setText("");
             }
         });
     }
@@ -287,9 +285,9 @@ public class Principal extends javax.swing.JFrame {
                         datos[0] = c;
                     }*/
                     if(i==2){
-                        String maquinaCodigo = results.getObject(i).toString();
-                        datos[0] = maquinaCodigo;
-                        System.out.println(maquinaCodigo);
+                        String nombreSala = results.getObject(i).toString();
+                        datos[0] = nombreSala;
+                        System.out.println(nombreSala);
                     }
                 }
                 model.addRow(datos);
@@ -337,8 +335,8 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrearSala;
+    private javax.swing.JButton btnEnviar;
     private javax.swing.JButton btnRefresacarSalas;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -349,8 +347,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabableChat;
     private javax.swing.JTable jTableSalas;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextArea txtAreaChat;
     private javax.swing.JTextField txtCrearSala;
+    private javax.swing.JTextField txtMsg;
     // End of variables declaration//GEN-END:variables
 }
