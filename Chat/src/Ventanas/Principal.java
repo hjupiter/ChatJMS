@@ -3,11 +3,15 @@ package Ventanas;
 
 
 import Conexion.Conexion;
+import ChatActive.Chat;
 import java.awt.event.MouseEvent;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.jms.JMSException;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -263,6 +267,11 @@ public class Principal extends javax.swing.JFrame {
             public void mouseClicked(MouseEvent e) {
                 txtAreaChat.setText("");
                 txtMsg.setText("");
+                try {
+                    new Chat(txtMsg, txtAreaChat, IdUsuario, btnEnviar);
+                } catch (JMSException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
