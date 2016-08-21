@@ -17,6 +17,7 @@ import java.sql.SQLException;
  */
 public class Conexion {
     private Connection conexion = null;
+    //private static final String cadena = "jdbc:postgresql://192.168.1.13:5432/Chat";
     private static final String cadena = "jdbc:postgresql://localhost:5432/Chat";
     private static final String user = "postgres";
     private static final String pass = "root";

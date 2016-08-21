@@ -33,7 +33,11 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  */
 public class Chat {
     private MessageProducer producer;
-    private String url = ActiveMQConnection.DEFAULT_BROKER_URL;
+    //private static final String URL = "tcp://192.168.1.13:61616";
+    //private String url = ActiveMQConnection.DEFAULT_BROKER_URL;
+    private static final String URL = "tcp://localhost:61616";
+    private static final String USER = ActiveMQConnection.DEFAULT_USER;
+    private static final String PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
 
     private static String Sala;
     private JTextArea textArea;
@@ -76,7 +80,7 @@ public class Chat {
     
     
     private void activeMQ() throws JMSException {
-        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(USER,PASSWORD,URL);
         connection = connectionFactory.createConnection();
         connection.start();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
