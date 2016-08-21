@@ -30,6 +30,7 @@ public class Principal extends javax.swing.JFrame {
 
     private DefaultTableModel model;
     private String IdUsuario;
+    private Chat chat;
     /**
      * Creates new form Principal
      */
@@ -267,13 +268,23 @@ public class Principal extends javax.swing.JFrame {
             public void mouseClicked(MouseEvent e) {
                 txtAreaChat.setText("");
                 txtMsg.setText("");
-                try {
-                    new Chat(txtMsg, txtAreaChat, IdUsuario, btnEnviar);
-                } catch (JMSException ex) {
-                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                chat = null;
+                System.out.println(chat);
+                tblEjemploMouseClicked(e);
             }
         });
+    }
+    
+    private void tblEjemploMouseClicked(java.awt.event.MouseEvent evt) {
+        String codigo,nombre,nombreSala;
+        int row = jTableSalas.rowAtPoint(evt.getPoint());
+        nombreSala = model.getValueAt(row,0).toString();
+        //System.out.println(nombreSala);
+        try {    
+            chat = new Chat(txtMsg, txtAreaChat, IdUsuario, btnEnviar,nombreSala);
+        } catch (JMSException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void setFilas() {
