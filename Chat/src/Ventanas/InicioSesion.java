@@ -1,6 +1,7 @@
 package Ventanas;
 
 import Conexion.Conexion;
+import java.awt.event.KeyEvent;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Types;
@@ -60,6 +61,11 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel1.setText("Usuario");
 
         txtUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUsuarioKeyTyped(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -129,7 +135,10 @@ public class InicioSesion extends javax.swing.JFrame {
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
-        
+        ingresar();
+    }//GEN-LAST:event_btnIniciarActionPerformed
+
+    private void ingresar(){
         if(!txtUsuario.getText().isEmpty()){
             Conexion conexion =  new Conexion();
             Connection conn = conexion.Conexion();
@@ -161,7 +170,15 @@ public class InicioSesion extends javax.swing.JFrame {
         else{
             JOptionPane.showConfirmDialog(this, "Debe Escribir un nombre de usuario para usar en el chat", "Mensaje",JOptionPane.CLOSED_OPTION);
         }
-    }//GEN-LAST:event_btnIniciarActionPerformed
+    }
+    
+    private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
+        // TODO add your handling code here:
+        char cteclaPresionada = evt.getKeyChar();
+        if(cteclaPresionada == KeyEvent.VK_ENTER){
+            ingresar();
+        }
+    }//GEN-LAST:event_txtUsuarioKeyTyped
 
     /**
      * @param args the command line arguments
