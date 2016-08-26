@@ -29,16 +29,93 @@ import javax.swing.table.DefaultTableModel;
 public class Principal extends javax.swing.JFrame {
 
     private DefaultTableModel model;
+    private DefaultTableModel modelChatGrupal;
     private String IdUsuario;
+    private int idUsuarioActual;
     private Chat chat;
     /**
      * Creates new form Principal
      */
     public Principal(String id) {
         initComponents();
-        llenarTable();
+        //llenarTable();
         this.IdUsuario = id;
+        this.idUsuarioActual =  buscarUusuarioActual();
+        llenarTableContactos(jTableContacto);
+        //llenarTableContactos(jTableSalasContactos);
+        llenarTableChatGrupal(jTableSalasGrupal);
+        llenarTableChatPrivado(jTableSalasPrivado);
         System.out.println(IdUsuario);
+        System.out.println(idUsuarioActual);
+    }
+    
+    public int buscarUusuarioActual(){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call BUSCAR_USUARIO( ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.INTEGER);
+            buscarUsuarioAcutal.setString(2,IdUsuario.toUpperCase());
+            buscarUsuarioAcutal.execute();
+            int id = buscarUsuarioAcutal.getInt(1);
+            buscarUsuarioAcutal.close();
+            conn.close();
+            return id;
+        }catch(Exception e){
+            return 0;
+        }
+    }
+    
+    public String buscarUusuarioID(int a){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call BUSCAR_USUARIO_ID( ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.VARCHAR);
+            buscarUsuarioAcutal.setInt(2,a);
+            buscarUsuarioAcutal.execute();
+            String id = buscarUsuarioAcutal.getString(1);
+            buscarUsuarioAcutal.close();
+            conn.close();
+            return id;
+        }catch(Exception e){
+            return "";
+        }
+    }
+    
+    public int buscarChatGrupal(){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call BUSCAR_CHAT_GRUPAL( ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.INTEGER);
+            buscarUsuarioAcutal.setString(2,nombreSalaChatGrupal.toUpperCase());
+            buscarUsuarioAcutal.execute();
+            int id = buscarUsuarioAcutal.getInt(1);
+            buscarUsuarioAcutal.close();
+            conn.close();
+            return id;
+        }catch(Exception e){
+            return 0;
+        }
+    }
+    
+    public boolean verificarParrticiapante(int a, int b){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call VERIFICAR_PARTICIPANTE_SALA( ? , ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.BOOLEAN);
+            buscarUsuarioAcutal.setInt(2,a);
+            buscarUsuarioAcutal.setInt(3,b);
+            buscarUsuarioAcutal.execute();
+            boolean id = buscarUsuarioAcutal.getBoolean(1);
+            buscarUsuarioAcutal.close();
+            conn.close();
+            return id;
+        }catch(Exception e){
+            return false;
+        }
     }
 
     /**
@@ -50,110 +127,63 @@ public class Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabableChat = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtAreaChat = new javax.swing.JTextArea();
-        txtMsg = new javax.swing.JTextField();
-        btnEnviar = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        txtCrearSala = new javax.swing.JTextField();
-        btnCrearSala = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTableSalas = new javax.swing.JTable();
-        btnRefresacarSalas = new javax.swing.JButton();
+        JtableContactos = new javax.swing.JTabbedPane();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTableSalasPrivado = new javax.swing.JTable();
+        btnRefresacarPrivada = new javax.swing.JButton();
+        panelChat1 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        txtAreaChat1 = new javax.swing.JTextArea();
+        txtMsg1 = new javax.swing.JTextField();
+        btnEnviar1 = new javax.swing.JButton();
+        jPanel16 = new javax.swing.JPanel();
+        txtCrearChatPrivado = new javax.swing.JTextField();
+        btnCrearPrivado = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtCrearPrivadoUsuario = new javax.swing.JTextField();
+        jPanel11 = new javax.swing.JPanel();
+        jPanel14 = new javax.swing.JPanel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jTableSalasGrupal = new javax.swing.JTable();
+        btnRefresacarGrupal = new javax.swing.JButton();
+        panelChat2 = new javax.swing.JPanel();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        txtAreaChat2 = new javax.swing.JTextArea();
+        txtMsg2 = new javax.swing.JTextField();
+        btnEnviar2 = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        jTableSalaGrupoParticipantes = new javax.swing.JTable();
+        btnAgregarParticipantes1 = new javax.swing.JButton();
+        jPanel10 = new javax.swing.JPanel();
+        btnAgregarParticipantes = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txtAgregarParticipante = new javax.swing.JTextField();
+        jPanel15 = new javax.swing.JPanel();
+        txtCrearSalaGrupo = new javax.swing.JTextField();
+        btnCrearGrupal = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        txtAgregarContacto = new javax.swing.JTextField();
+        btnAgregarContacto = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTableContacto = new javax.swing.JTable();
+        btnRefresacarContactos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Chat", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Salas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
 
-        txtAreaChat.setBackground(new java.awt.Color(240, 240, 240));
-        txtAreaChat.setColumns(20);
-        txtAreaChat.setRows(5);
-        jScrollPane2.setViewportView(txtAreaChat);
-
-        btnEnviar.setText("Enviar");
-        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(txtMsg)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtMsg)
-                    .addComponent(btnEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Crear Sala", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
-
-        txtCrearSala.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-
-        btnCrearSala.setText("Crear");
-        btnCrearSala.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCrearSalaActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setText("Nombre Sala");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCrearSala)
-                    .addComponent(txtCrearSala, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtCrearSala, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btnCrearSala)
-                .addGap(52, 52, 52))
-        );
-
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Salas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
-
-        jTableSalas.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jTableSalas.setModel(new javax.swing.table.DefaultTableModel(
+        jTableSalasPrivado.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTableSalasPrivado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -164,97 +194,808 @@ public class Principal extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane3.setViewportView(jTableSalas);
+        jTableSalasPrivado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableSalasPrivadoMouseClicked(evt);
+            }
+        });
+        jScrollPane7.setViewportView(jTableSalasPrivado);
 
-        btnRefresacarSalas.setText("Refrescar");
-        btnRefresacarSalas.addActionListener(new java.awt.event.ActionListener() {
+        btnRefresacarPrivada.setText("Refrescar");
+        btnRefresacarPrivada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefresacarSalasActionPerformed(evt);
+                btnRefresacarPrivadaActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnRefresacarSalas)))
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                        .addGap(0, 157, Short.MAX_VALUE)
+                        .addComponent(btnRefresacarPrivada)))
                 .addContainerGap())
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRefresacarSalas))
+                .addComponent(btnRefresacarPrivada))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelChat1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Chat", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+
+        txtAreaChat1.setEditable(false);
+        txtAreaChat1.setBackground(new java.awt.Color(240, 240, 240));
+        txtAreaChat1.setColumns(20);
+        txtAreaChat1.setRows(5);
+        jScrollPane8.setViewportView(txtAreaChat1);
+
+        btnEnviar1.setText("Enviar");
+        btnEnviar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviar1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelChat1Layout = new javax.swing.GroupLayout(panelChat1);
+        panelChat1.setLayout(panelChat1Layout);
+        panelChat1Layout.setHorizontalGroup(
+            panelChat1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelChat1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelChat1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelChat1Layout.createSequentialGroup()
+                        .addComponent(txtMsg1)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEnviar1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelChat1Layout.setVerticalGroup(
+            panelChat1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelChat1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(panelChat1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtMsg1)
+                    .addComponent(btnEnviar1, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabableChat.addTab("Salas de Chat", jPanel1);
+        jPanel16.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Crear Chat Grupal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+
+        txtCrearChatPrivado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        btnCrearPrivado.setText("Crear");
+        btnCrearPrivado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearPrivadoActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setText("Nombre. Grupo");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Usuario");
+
+        txtCrearPrivadoUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
+        jPanel16.setLayout(jPanel16Layout);
+        jPanel16Layout.setHorizontalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel16Layout.createSequentialGroup()
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addGap(123, 123, 123)
+                                .addComponent(btnCrearPrivado))
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtCrearChatPrivado, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtCrearPrivadoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel16Layout.setVerticalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtCrearPrivadoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtCrearChatPrivado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnCrearPrivado)
+                .addGap(23, 23, 23))
+        );
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(panelChat1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelChat1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        JtableContactos.addTab("Sala de Chat Privada", jPanel9);
+
+        jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Salas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+
+        jTableSalasGrupal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTableSalasGrupal.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane9.setViewportView(jTableSalasGrupal);
+
+        btnRefresacarGrupal.setText("Refrescar");
+        btnRefresacarGrupal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefresacarGrupalActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRefresacarGrupal)))
+                .addContainerGap())
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRefresacarGrupal))
+        );
+
+        panelChat2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Chat", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+
+        txtAreaChat2.setEditable(false);
+        txtAreaChat2.setBackground(new java.awt.Color(240, 240, 240));
+        txtAreaChat2.setColumns(20);
+        txtAreaChat2.setRows(5);
+        jScrollPane10.setViewportView(txtAreaChat2);
+
+        btnEnviar2.setText("Enviar");
+        btnEnviar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviar2ActionPerformed(evt);
+            }
+        });
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Participantes"));
+
+        jTableSalaGrupoParticipantes.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTableSalaGrupoParticipantes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane11.setViewportView(jTableSalaGrupoParticipantes);
+
+        btnAgregarParticipantes1.setText("Refrescar");
+        btnAgregarParticipantes1.setToolTipText("");
+        btnAgregarParticipantes1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarParticipantes1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(btnAgregarParticipantes1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAgregarParticipantes1)
+                .addContainerGap())
+        );
+
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Agregar Participante"));
+
+        btnAgregarParticipantes.setText("Agregar");
+        btnAgregarParticipantes.setToolTipText("");
+        btnAgregarParticipantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarParticipantesActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Nombre");
+
+        txtAgregarParticipante.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(btnAgregarParticipantes)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtAgregarParticipante))
+                .addContainerGap())
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtAgregarParticipante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addComponent(btnAgregarParticipantes)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout panelChat2Layout = new javax.swing.GroupLayout(panelChat2);
+        panelChat2.setLayout(panelChat2Layout);
+        panelChat2Layout.setHorizontalGroup(
+            panelChat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelChat2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelChat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelChat2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelChat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panelChat2Layout.createSequentialGroup()
+                        .addComponent(txtMsg2)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEnviar2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)))
+                .addContainerGap())
+        );
+        panelChat2Layout.setVerticalGroup(
+            panelChat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelChat2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelChat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelChat2Layout.createSequentialGroup()
+                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(panelChat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMsg2)
+                    .addComponent(btnEnviar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jPanel15.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel15.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Crear Chat Grupal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+
+        txtCrearSalaGrupo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        btnCrearGrupal.setText("Crear");
+        btnCrearGrupal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearGrupalActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel4.setText("Nombre. Grupo");
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCrearGrupal)
+                    .addComponent(txtCrearSalaGrupo, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCrearSalaGrupo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnCrearGrupal)
+                .addGap(52, 52, 52))
+        );
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(panelChat2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelChat2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        JtableContactos.addTab("Sala de Chat Grupal", jPanel11);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Agenda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Agregar Contacto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Nombre");
+
+        txtAgregarContacto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        btnAgregarContacto.setText("Agregar");
+        btnAgregarContacto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarContactoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(btnAgregarContacto)
+                        .addGap(0, 86, Short.MAX_VALUE))
+                    .addComponent(txtAgregarContacto))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtAgregarContacto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnAgregarContacto)
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(13, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Contactos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+
+        jTableContacto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTableContacto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jTableContacto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableContactoMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jTableContacto);
+
+        btnRefresacarContactos.setText("Refrescar");
+        btnRefresacarContactos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefresacarContactosActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRefresacarContactos)))
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRefresacarContactos))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 910, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 483, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        jTabableChat.addTab("Contactos", jPanel2);
+        JtableContactos.addTab("Contactos", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabableChat)
+            .addComponent(JtableContactos)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabableChat, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(JtableContactos, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRefresacarContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefresacarContactosActionPerformed
+        // TODO add your handling code here:
+        llenarTableContactos(jTableContacto);
+    }//GEN-LAST:event_btnRefresacarContactosActionPerformed
+
+    private void jTableContactoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableContactoMouseClicked
+        // TODO add your handling code here:
+        System.out.println("-------------------------");
+    }//GEN-LAST:event_jTableContactoMouseClicked
+
+    private void btnAgregarContactoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarContactoActionPerformed
+        // TODO add your handling code here:
+        if(!txtAgregarContacto.getText().isEmpty()){
+            Conexion conexion =  new Conexion();
+            Connection conn = conexion.Conexion();
+            try {
+                CallableStatement buscarUsuario = conn.prepareCall("{ ? = call BUSCAR_USUARIO( ? ) }");
+                buscarUsuario.registerOutParameter(1, Types.INTEGER);
+                buscarUsuario.setString(2,txtAgregarContacto.getText().toUpperCase());
+                buscarUsuario.execute();
+                System.out.println("----------------------");
+                int resw = buscarUsuario.getInt(1);
+                System.out.println(resw);
+                System.out.println("----------------------");
+                buscarUsuario.close();
+
+                if((resw != idUsuarioActual) && (resw!=0)){
+                    CallableStatement agregarContacto = conn.prepareCall("{ ? = call AGREGAR_CONTACTO( ? , ? , ? ) }");
+                    agregarContacto.registerOutParameter(1, Types.BOOLEAN);
+                    agregarContacto.setString(2,txtAgregarContacto.getText().toUpperCase());
+                    agregarContacto.setInt(3,idUsuarioActual);
+                    agregarContacto.setString(4,IdUsuario.toUpperCase());
+                    agregarContacto.execute();
+                    Boolean res = agregarContacto.getBoolean(1);
+                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+                    System.out.println(txtAgregarContacto.getText()+" "+resw +" - "+ idUsuarioActual);
+                    if(res){
+                        JOptionPane.showConfirmDialog(this, "Contacto Agregado", "Mensaje",JOptionPane.CLOSED_OPTION);
+
+                        CallableStatement agregarContacto2 = conn.prepareCall("{ ? = call AGREGAR_CONTACTO( ? , ? , ?) }");
+                        agregarContacto2.registerOutParameter(1, Types.BOOLEAN);
+                        agregarContacto2.setString(2,IdUsuario.toUpperCase());
+                        System.out.println(IdUsuario+" "+idUsuarioActual+" - "+ resw);
+                        agregarContacto2.setInt(3,resw);
+                        agregarContacto2.setString(4,txtAgregarContacto.getText());
+                        agregarContacto2.execute();
+                    }
+                    else{
+                        JOptionPane.showConfirmDialog(this, "El usuario ya se encuentra agreado a los contactos", "Mensaje",JOptionPane.CLOSED_OPTION);
+                    }
+                    agregarContacto.close();
+                }
+                else if (resw == idUsuarioActual){
+                    JOptionPane.showConfirmDialog(this, "No te pudes agregar a ti mismo como Contacto", "Mensaje",JOptionPane.CLOSED_OPTION);
+                }
+                else{
+                    JOptionPane.showConfirmDialog(this, "El usuario al que intentas agregara no existe", "Mensaje",JOptionPane.CLOSED_OPTION);
+                }
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            JOptionPane.showConfirmDialog(this, "Debe Escribir un nombre de algun usuario para agregar a los contactos", "Mensaje",JOptionPane.CLOSED_OPTION);
+        }
+    }//GEN-LAST:event_btnAgregarContactoActionPerformed
+
+    private void btnCrearGrupalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGrupalActionPerformed
+        // TODO add your handling code here:
+        if(!txtCrearSalaGrupo.getText().isEmpty()){
+            Conexion conexion =  new Conexion();
+            Connection conn = conexion.Conexion();
+            try {
+                CallableStatement crearSala = conn.prepareCall("{ ? = call CREAR_ROM( ? , ? , ? ) }");
+                crearSala.registerOutParameter(1, Types.BOOLEAN);
+                crearSala.setString(2,txtCrearSalaGrupo.getText().toUpperCase());
+                crearSala.setInt(3,3);
+                crearSala.setInt(4,idUsuarioActual);
+                crearSala.execute();
+                Boolean res = crearSala.getBoolean(1);
+                System.out.println(res);
+                if(res){
+                    txtCrearSalaGrupo.setText("");
+                    JOptionPane.showConfirmDialog(this, "Sala Creada", "Mensaje",JOptionPane.CLOSED_OPTION);
+                }
+                else{
+                    JOptionPane.showConfirmDialog(this, "La Sala ya Existe", "Mensaje",JOptionPane.CLOSED_OPTION);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            JOptionPane.showConfirmDialog(this, "Debe Escribir un nombre para la sala", "Mensaje",JOptionPane.CLOSED_OPTION);
+        }
+
+    }//GEN-LAST:event_btnCrearGrupalActionPerformed
+
+    private void btnAgregarParticipantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarParticipantesActionPerformed
+        // TODO add your handling code here:
+        int sala = buscarChatGrupal();
+        System.out.println("{{{{{{{{{{{{{{{{{----------");
+        System.out.println(sala);
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            conn.setAutoCommit(false);
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call BUSCAR_USUARIO( ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.INTEGER);
+            buscarUsuarioAcutal.setString(2,IdUsuario.toUpperCase());
+            buscarUsuarioAcutal.execute();
+            int resq = buscarUsuarioAcutal.getInt(1);
+            buscarUsuarioAcutal.close();
+
+            CallableStatement buscarUsuario = conn.prepareCall("{ ? = call BUSCAR_USUARIO( ? ) }");
+            buscarUsuario.registerOutParameter(1, Types.INTEGER);
+            buscarUsuario.setString(2,txtAgregarParticipante.getText().toUpperCase());
+            buscarUsuario.execute();
+            int resW = buscarUsuario.getInt(1);
+            buscarUsuario.close();
+
+            CallableStatement contactosUsuario =  conn.prepareCall("{ ? = CALL CONTACTOS_USUARIO ( ? ) }");
+            contactosUsuario.registerOutParameter(1, Types.OTHER);
+            contactosUsuario.setInt(2,resq);
+            contactosUsuario.execute();
+            ResultSet results = (ResultSet)contactosUsuario.getObject(1);
+            Object datos[] = new Object[2];
+            while(results.next()){
+                for(int i = 0; i<3;i++){
+                    if(i==2){
+                        String nombreSala = results.getObject(i).toString();
+                        System.out.println(nombreSala);
+                        System.out.println();
+                        if((nombreSala.equals(txtAgregarParticipante.getText().toUpperCase())==true) && (verificarParrticiapante(resW,sala)==false)){
+                            //System.out.println("---------------------------");
+                            agregarParticipante(sala, resW);
+                        }
+                    }
+                }
+            }
+            contactosUsuario.close();
+            conn.close();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnAgregarParticipantesActionPerformed
+
+    private void btnAgregarParticipantes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarParticipantes1ActionPerformed
+        // TODO add your handling code here:
+        llenarTAbleParticipantes(jTableSalaGrupoParticipantes);
+    }//GEN-LAST:event_btnAgregarParticipantes1ActionPerformed
+
+    private void btnEnviar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviar2ActionPerformed
+        // TODO add your handling code here:
+        grabarMensaje(IdUsuario.toUpperCase(), txtMsg2.getText(), buscarRom(nombreSalaChatGrupal));
+        txtMsg2.setText("");
+    }//GEN-LAST:event_btnEnviar2ActionPerformed
+
+    private void btnRefresacarGrupalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefresacarGrupalActionPerformed
+        // TODO add your handling code here:
+
+        llenarTableChatGrupal(jTableSalasGrupal);
+    }//GEN-LAST:event_btnRefresacarGrupalActionPerformed
+
+    private void btnCrearPrivadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPrivadoActionPerformed
+        // TODO add your handling code here:
+        if(!txtCrearChatPrivado.getText().isEmpty() && !txtCrearPrivadoUsuario.getText().isEmpty()){
+            Conexion conexion =  new Conexion();
+            Connection conn = conexion.Conexion();
+            try {
+                conn.setAutoCommit(false);
+                CallableStatement u =  conn.prepareCall("{ ? = CALL CONTACTOS_USUARIO ( ? ) }");
+                u.registerOutParameter(1, Types.OTHER);
+                System.out.println("---------->>>>>>"+buscarUusuarioActual());
+                int a = buscarUusuarioActual();
+                u.setInt(2,a);
+                u.execute();
+                ResultSet results = (ResultSet)u.getObject(1);
+                Object datos[] = new Object[2];
+                while(results.next()){
+                    for(int i = 0; i<3;i++){
+                        if(i==2){
+                            String nombreSala = results.getObject(i).toString();
+                            System.out.println(nombreSala);
+                            System.out.println();
+                            if((nombreSala.equals(txtCrearPrivadoUsuario.getText().toUpperCase())==true) && (verificar_existencia_rom(txtCrearChatPrivado.getText().toUpperCase())==false)){
+                                //crear sala privada
+                                CallableStatement buscarUsuario = conn.prepareCall("{ ? = call BUSCAR_USUARIO( ? ) }");
+                                buscarUsuario.registerOutParameter(1, Types.INTEGER);
+                                buscarUsuario.setString(2,txtCrearPrivadoUsuario.getText().toUpperCase());
+                                buscarUsuario.execute();
+                                int resW = buscarUsuario.getInt(1);
+                                buscarUsuario.close();
+                                crearSalaPrivada(txtCrearChatPrivado.getText(),2,buscarUusuarioActual(),resW);
+                            }
+                        }
+                    }
+                }
+                u.close();
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            JOptionPane.showConfirmDialog(this, "Debe Escribir un nombre para la sala", "Mensaje",JOptionPane.CLOSED_OPTION);
+        }
+
+    }//GEN-LAST:event_btnCrearPrivadoActionPerformed
+
+    private void btnEnviar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviar1ActionPerformed
+        // TODO add your handling code here:
+        //System.out.println("----------------------------->");
+        //System.out.println(txtMsg1.getText());
+        grabarMensaje(IdUsuario.toUpperCase(), txtMsg1.getText(), buscarRom(nombreSalaChatPrivado));
+        txtMsg1.setText("");
+    }//GEN-LAST:event_btnEnviar1ActionPerformed
+
+    private void btnRefresacarPrivadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefresacarPrivadaActionPerformed
+        // TODO add your handling code here:
+        llenarTableChatPrivado(jTableSalasPrivado);
+    }//GEN-LAST:event_btnRefresacarPrivadaActionPerformed
+
+    private void jTableSalasPrivadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSalasPrivadoMouseClicked
+        // TODO add your handling code here:
+        txtMsg1.setEditable(true);
+        btnEnviar1.setEnabled(true);
+    }//GEN-LAST:event_jTableSalasPrivadoMouseClicked
+
     private String[] getColumnas(){
           String columna[]=new String[]{"Sala"};
           return columna;
     }
-    
+    /*
     private void llenarTable(){
         model = new DefaultTableModel(null,getColumnas()){
             public boolean isCellEditable(int row, int column) {
@@ -265,7 +1006,254 @@ public class Principal extends javax.swing.JFrame {
         jTableSalas.setModel(model);
         setEventoMouseClicked(jTableSalas);
     }
+    */
     
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    private void llenarTableContactos(JTable jtable){
+        model = new DefaultTableModel(null,getColumnasContactos()){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        setFilasContactos();
+        jtable.setModel(model);
+        //setEventoMouseClicked(jTableSalas);
+    }
+    
+    private String[] getColumnasContactos(){
+          String columna[]=new String[]{"Sala"};
+          return columna;
+    }
+    
+    private void setFilasContactos() {
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            conn.setAutoCommit(false);
+            System.out.println("------------------");
+            System.out.println(IdUsuario);
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call BUSCAR_USUARIO( ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.INTEGER);
+            buscarUsuarioAcutal.setString(2,IdUsuario.toUpperCase());
+            buscarUsuarioAcutal.execute();
+            int resq = buscarUsuarioAcutal.getInt(1);
+            System.out.println(resq);
+            buscarUsuarioAcutal.close();
+            System.out.println(resq);
+            
+            CallableStatement contactosUsuario =  conn.prepareCall("{ ? = CALL CONTACTOS_USUARIO ( ? ) }");
+            contactosUsuario.registerOutParameter(1, Types.OTHER);
+            contactosUsuario.setInt(2,resq);
+            contactosUsuario.execute();
+            ResultSet results = (ResultSet)contactosUsuario.getObject(1);
+            Object datos[] = new Object[2];
+            while(results.next()){
+                for(int i = 0; i<3;i++){
+                    if(i==2){
+                        String nombreSala = results.getObject(i).toString();
+                        datos[0] = nombreSala;
+                        System.out.println(nombreSala);
+                    }
+                }
+                model.addRow(datos);
+            }
+            contactosUsuario.close();
+            conn.close();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    private DefaultTableModel modelPArticipantes;
+    private void llenarTAbleParticipantes(JTable jtable){
+        modelPArticipantes = new DefaultTableModel(null,getColumnasPArticipantes()){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        setFilasPArticipantes();
+        jtable.setModel(modelPArticipantes);
+        //setEventoMouseClicked(jTableSalas);
+    }
+    
+    private String[] getColumnasPArticipantes(){
+          String columna[]=new String[]{"Participante"};
+          return columna;
+    }
+    
+    private void setFilasPArticipantes() {
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        int sala = buscarChatGrupal();
+        try{
+            conn.setAutoCommit(false);
+            CallableStatement salas_grupales =  conn.prepareCall("{ ? = CALL TODAS_PARTICIPANTES ( ? ) }");
+            salas_grupales.registerOutParameter(1, Types.OTHER);
+            salas_grupales.setInt(2,sala);
+            salas_grupales.execute();
+            ResultSet results = (ResultSet)salas_grupales.getObject(1);
+            Object datos[] = new Object[2];
+            while(results.next()){ 
+                int b=0;
+                for(int i = 0; i<5;i++){
+                    if(i==3){
+                        String nombreSala = results.getObject(i).toString();
+                        System.out.println(nombreSala);
+                        int t = Integer.parseInt(nombreSala);
+                        if(t>0){
+                            System.out.println("------------");
+                            b=1;
+                            datos[0] = buscarUusuarioID(t);
+                        }
+                    }
+                }
+                if(b==1){
+                    modelPArticipantes.addRow(datos);
+                    b=0;
+                }
+            }
+            salas_grupales.close();
+            conn.close();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+            
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    private DefaultTableModel modelChatprivado;
+    private void llenarTableChatPrivado(JTable jtable){
+        modelChatprivado = new DefaultTableModel(null,getColumnasChatPrivado()){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        setFilasChatPrivado();
+        jtable.setModel(modelChatprivado);
+        setEventoMouseClickedChatPrivado(jTableSalasPrivado);
+    }
+    
+    private String[] getColumnasChatPrivado(){
+          String columna[]=new String[]{"Sala"};
+          return columna;
+    }
+    
+    private void setFilasChatPrivado() {
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            conn.setAutoCommit(false);
+            CallableStatement salas_grupales =  conn.prepareCall("{ ? = CALL TODAS_SALAS_GRUPALES ( ? , ? ) }");
+            salas_grupales.registerOutParameter(1, Types.OTHER);
+            salas_grupales.setInt(2,idUsuarioActual);
+            salas_grupales.setInt(3,2);
+            salas_grupales.execute();
+            ResultSet results = (ResultSet)salas_grupales.getObject(1);
+            Object datos[] = new Object[2];
+            while(results.next()){ 
+                for(int i = 0; i<5;i++){
+                    if(i==3){
+                        String nombreSala = results.getObject(i).toString();
+                        datos[0] = nombreSala;
+                    }
+                }
+                modelChatprivado.addRow(datos);
+            }
+            salas_grupales.close();
+            conn.close();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void setEventoMouseClickedChatPrivado(JTable tbl){
+        tbl.addMouseListener(new java.awt.event.MouseAdapter() {
+ 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                txtAreaChat1.setText("");
+                ///////////////////////////////////////
+                
+                
+                
+                ///////////////////////////////////////
+                txtMsg1.setText("");
+                if(chat!=null){
+                    try {
+                        chat.stopConecction();
+                    } catch (JMSException ex) {
+                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                tblEjemploMouseClickedChatPrivado(e);
+            }
+        });
+    }
+    
+    public void cargarMensajes(int id){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            conn.setAutoCommit(false);
+            CallableStatement salas_grupales =  conn.prepareCall("{ ? = CALL mensajes_rom ( ? ) }");
+            salas_grupales.registerOutParameter(1, Types.OTHER);
+            salas_grupales.setInt(2,id);
+            salas_grupales.execute();
+            ResultSet results = (ResultSet)salas_grupales.getObject(1);
+            Object datos[] = new Object[2];
+            while(results.next()){ 
+                String usuario = "";
+                String mensaje = "";
+                for(int i = 0; i<5;i++){
+                    if(i==2){
+                        usuario = results.getObject(i).toString();
+                        System.out.println(usuario);
+                    }
+                    if(i==3){
+                        mensaje = results.getObject(i).toString();
+                    }
+                }
+                txtAreaChat1.append(usuario + ": " + mensaje + "\n");
+            }
+            salas_grupales.close();
+            conn.close();
+        }catch(Exception e){
+        }
+    }
+    
+    private String nombreSalaChatPrivado;
+    private void tblEjemploMouseClickedChatPrivado(java.awt.event.MouseEvent evt) {
+        String codigo,nombre,nombreSala;
+        cargarMensajes(buscarRom(nombreSalaChatPrivado));
+        int row = jTableSalasPrivado.rowAtPoint(evt.getPoint());
+        nombreSalaChatPrivado = modelChatprivado.getValueAt(row,0).toString();
+        System.out.println(nombreSalaChatPrivado);
+        /*txtMsg2.enableInputMethods(true);
+        btnEnviar2.enableInputMethods(true);
+        btnAgregarParticipantes.enableInputMethods(true);
+        btnAgregarParticipantes1.enableInputMethods(true);
+        txtAgregarParticipante.enableInputMethods(true);*/
+        //txtMsg.enableInputMethods(true);
+        //btnEnviar.enableInputMethods(true);
+        try {    
+            int idrom = buscarRom(nombreSalaChatPrivado);
+            chat = new Chat(txtMsg1, txtAreaChat1, IdUsuario, btnEnviar1, nombreSalaChatPrivado,idrom);
+        } catch (JMSException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /*
     private void setEventoMouseClicked(JTable tbl){
         tbl.addMouseListener(new java.awt.event.MouseAdapter() {
  
@@ -283,28 +1271,31 @@ public class Principal extends javax.swing.JFrame {
                 tblEjemploMouseClicked(e);
             }
         });
-    }
+    }*/
     
-    private void tblEjemploMouseClicked(java.awt.event.MouseEvent evt) {
+    /*private void tblEjemploMouseClicked(java.awt.event.MouseEvent evt) {
         String codigo,nombre,nombreSala;
         int row = jTableSalas.rowAtPoint(evt.getPoint());
         nombreSala = model.getValueAt(row,0).toString();
+        txtMsg.enableInputMethods(true);
+        btnEnviar.enableInputMethods(true);
         try {    
-            chat = new Chat(txtMsg, txtAreaChat, IdUsuario, btnEnviar,nombreSala);
+            //chat = new Chat(txtMsg, txtAreaChat, IdUsuario, btnEnviar, nombreSala);
         } catch (JMSException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    */
     private void setFilas() {
         Conexion conexion =  new Conexion();
         Connection conn = conexion.Conexion();
         try{
             conn.setAutoCommit(false);
-            CallableStatement todas_salas =  conn.prepareCall("{ ? = CALL TODAS_SALAS ( ) }");
-            todas_salas.registerOutParameter(1, Types.OTHER);
-            todas_salas.execute();
-            ResultSet results = (ResultSet)todas_salas.getObject(1);
+            CallableStatement salas_globales =  conn.prepareCall("{ ? = CALL SALAS_GlOBALES ( ? ) }");
+            salas_globales.registerOutParameter(1, Types.OTHER);
+            salas_globales.setInt(2,1);
+            salas_globales.execute();
+            ResultSet results = (ResultSet)salas_globales.getObject(1);
             Object datos[] = new Object[2];
             while(results.next()){
                 for(int i = 0; i<3;i++){
@@ -316,27 +1307,52 @@ public class Principal extends javax.swing.JFrame {
                 }
                 model.addRow(datos);
             }
-            todas_salas.close();
+            salas_globales.close();
             conn.close();
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
     }
     
-    private void btnCrearSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearSalaActionPerformed
-        // TODO add your handling code here:
-        if(!txtCrearSala.getText().isEmpty()){
-            Conexion conexion =  new Conexion();
+    
+    
+    
+    
+    
+    
+    private void agregarParticipante(int a,int b){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call AGREGAR_PARTICIPANTE( ? , ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.BOOLEAN);
+            buscarUsuarioAcutal.setInt(2,a);
+            buscarUsuarioAcutal.setInt(3,b);
+            buscarUsuarioAcutal.execute();
+            boolean id = buscarUsuarioAcutal.getBoolean(1);
+            buscarUsuarioAcutal.close();
+            conn.close();
+        }catch(Exception e){
+        }
+    }
+    
+    
+    public void crearSalaPrivada(String descripcion,int tipo, int idUsuario, int participante){
+        
+        Conexion conexion =  new Conexion();
             Connection conn = conexion.Conexion();
             try {
-                CallableStatement crearSala = conn.prepareCall("{ ? = call CREAR_SALA( ? ) }");
+                CallableStatement crearSala = conn.prepareCall("{ ? = call CREAR_rom_privado( ? , ? , ? , ? ) }");
                 crearSala.registerOutParameter(1, Types.BOOLEAN);
-                crearSala.setString(2,txtCrearSala.getText().toUpperCase());
+                crearSala.setString(2,descripcion.toUpperCase());
+                crearSala.setInt(3,2);
+                crearSala.setInt(4,idUsuario);
+                crearSala.setInt(5,participante);
                 crearSala.execute();
                 Boolean res = crearSala.getBoolean(1);
                 System.out.println(res);
                 if(res){
-                    txtCrearSala.setText("");
+                    txtCrearSalaGrupo.setText("");
                     JOptionPane.showConfirmDialog(this, "Sala Creada", "Mensaje",JOptionPane.CLOSED_OPTION);
                 }
                 else{
@@ -345,43 +1361,114 @@ public class Principal extends javax.swing.JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else{
-            JOptionPane.showConfirmDialog(this, "Debe Escribir un nombre para la sala", "Mensaje",JOptionPane.CLOSED_OPTION);
-        }
-    }//GEN-LAST:event_btnCrearSalaActionPerformed
-
-    private void btnRefresacarSalasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefresacarSalasActionPerformed
-        // TODO add your handling code here:
-        llenarTable();
-    }//GEN-LAST:event_btnRefresacarSalasActionPerformed
-
-    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        // TODO add your handling code here:
         
-    }//GEN-LAST:event_btnEnviarActionPerformed
-
+    }
+    
+    public boolean verificar_existencia_rom(String rom){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try {
+            CallableStatement verificarRom =  conn.prepareCall("{ ? = verificar_existencia_rom ( ? ,?) }");
+            verificarRom.registerOutParameter(1, Types.BOOLEAN);
+            verificarRom.setString(2,rom);
+            verificarRom.setInt(2,2);
+            verificarRom.execute();
+            boolean id = verificarRom.getBoolean(1);
+            verificarRom.close();
+            conn.close();
+            return id;
+        }catch(Exception e){
+            return false;
+        }
+    }
+    
+    public void grabarMensaje(String usuario,String textom, int rom){
+        Conexion conexion =  new Conexion();
+        java.sql.Connection conn = conexion.Conexion();
+        try{
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call insertar_mensaje( ? , ? , ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.BOOLEAN);
+            buscarUsuarioAcutal.setString(2,usuario);
+            buscarUsuarioAcutal.setString(3,textom);
+            buscarUsuarioAcutal.setInt(4,rom);
+            buscarUsuarioAcutal.execute();
+            //String id = buscarUsuarioAcutal.getString(1);
+            buscarUsuarioAcutal.close();
+            conn.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public int buscarRom(String rom){
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            CallableStatement buscarUsuarioAcutal = conn.prepareCall("{ ? = call BUSCAR_ROM( ? ) }");
+            buscarUsuarioAcutal.registerOutParameter(1, Types.INTEGER);
+            buscarUsuarioAcutal.setString(2,rom.toUpperCase());
+            buscarUsuarioAcutal.execute();
+            int id = buscarUsuarioAcutal.getInt(1);
+            buscarUsuarioAcutal.close();
+            return id;
+        }catch(Exception e){
+            return 0;
+        }
+    }
     
     public void chat() throws JMSException{
         
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCrearSala;
-    private javax.swing.JButton btnEnviar;
-    private javax.swing.JButton btnRefresacarSalas;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTabbedPane JtableContactos;
+    private javax.swing.JButton btnAgregarContacto;
+    private javax.swing.JButton btnAgregarParticipantes;
+    private javax.swing.JButton btnAgregarParticipantes1;
+    private javax.swing.JButton btnCrearGrupal;
+    private javax.swing.JButton btnCrearPrivado;
+    private javax.swing.JButton btnEnviar1;
+    private javax.swing.JButton btnEnviar2;
+    private javax.swing.JButton btnRefresacarContactos;
+    private javax.swing.JButton btnRefresacarGrupal;
+    private javax.swing.JButton btnRefresacarPrivada;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabableChat;
-    private javax.swing.JTable jTableSalas;
-    private javax.swing.JTextArea txtAreaChat;
-    private javax.swing.JTextField txtCrearSala;
-    private javax.swing.JTextField txtMsg;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JTable jTableContacto;
+    private javax.swing.JTable jTableSalaGrupoParticipantes;
+    private javax.swing.JTable jTableSalasGrupal;
+    private javax.swing.JTable jTableSalasPrivado;
+    private javax.swing.JPanel panelChat1;
+    private javax.swing.JPanel panelChat2;
+    private javax.swing.JTextField txtAgregarContacto;
+    private javax.swing.JTextField txtAgregarParticipante;
+    private javax.swing.JTextArea txtAreaChat1;
+    private javax.swing.JTextArea txtAreaChat2;
+    private javax.swing.JTextField txtCrearChatPrivado;
+    private javax.swing.JTextField txtCrearPrivadoUsuario;
+    private javax.swing.JTextField txtCrearSalaGrupo;
+    private javax.swing.JTextField txtMsg1;
+    private javax.swing.JTextField txtMsg2;
     // End of variables declaration//GEN-END:variables
 }

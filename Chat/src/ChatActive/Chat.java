@@ -5,9 +5,12 @@
  */
 package ChatActive;
 
+import Conexion.Conexion;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Types;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
@@ -45,15 +48,17 @@ public class Chat {
     private String Usuario;
     private JButton btnEnviar;
     private JTextField txtMsg;
+    private int IDRom;
     
     private Connection connection;
     
-    public Chat(JTextField msg, JTextArea txtArea, String usuario, JButton btnEnviar,String nombreSala) throws JMSException {
+    public Chat(JTextField msg, JTextArea txtArea, String usuario, JButton btnEnviar,String nombreSala, int idrom) throws JMSException {
         this.textArea = txtArea;
         this.Usuario = usuario;
         this.btnEnviar = btnEnviar;
         this.txtMsg = msg;
         this.Sala = nombreSala;
+        this.IDRom = idrom;
         System.out.println(nombreSala);
         btnEnviar.addActionListener(new ActionListener() {
 
@@ -61,12 +66,16 @@ public class Chat {
             public void actionPerformed(ActionEvent e) {
                 MapMessage map;
                 try {
+                    System.out.println(usuario);
+                    System.out.println(txtMsg.getText());
+                    System.out.println(idrom);
+                    
                     map = session.createMapMessage();
                     map.setString("usuario", usuario);
                     map.setString("texto", txtMsg.getText());
-                    txtMsg.setText("");
+                    //txtMsg.setText("");
                     producer.send(map);
-                    //producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+                    producer.setDeliveryMode(DeliveryMode.PERSISTENT);
                     System.out.println(map);
 
                 } catch (JMSException e1) {
@@ -102,7 +111,7 @@ public class Chat {
                     try {
                         String usuario = map.getString("usuario");
                         String texto = map.getString("texto");
-                        textArea.append(usuario + ": " + texto + "\n");
+                        textArea.append(usuario.toUpperCase() + ": " + texto + "\n");
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }
