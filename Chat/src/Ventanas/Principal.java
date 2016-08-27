@@ -1065,7 +1065,96 @@ public class Principal extends javax.swing.JFrame {
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////
     
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+    private void llenarTableChatGrupal(JTable jtable){
+        modelChatGrupal = new DefaultTableModel(null,getColumnasChatGrupal()){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        setFilasChatGrupal();
+        jtable.setModel(modelChatGrupal);
+        setEventoMouseClickedChatGrupal(jTableSalasGrupal);
+    }
     
+    private String[] getColumnasChatGrupal(){
+          String columna[]=new String[]{"Sala"};
+          return columna;
+    }
+    
+    private void setFilasChatGrupal() {
+        Conexion conexion =  new Conexion();
+        Connection conn = conexion.Conexion();
+        try{
+            conn.setAutoCommit(false);
+            CallableStatement salas_grupales =  conn.prepareCall("{ ? = CALL TODAS_SALAS_GRUPALES ( ? , ? ) }");
+            salas_grupales.registerOutParameter(1, Types.OTHER);
+            salas_grupales.setInt(2,idUsuarioActual);
+            salas_grupales.setInt(3,3);
+            salas_grupales.execute();
+            ResultSet results = (ResultSet)salas_grupales.getObject(1);
+            Object datos[] = new Object[2];
+            while(results.next()){ 
+                for(int i = 0; i<5;i++){
+                    if(i==3){
+                        String nombreSala = results.getObject(i).toString();
+                        datos[0] = nombreSala;
+                    }
+                }
+                modelChatGrupal.addRow(datos);
+            }
+            salas_grupales.close();
+            conn.close();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void setEventoMouseClickedChatGrupal(JTable tbl){
+        tbl.addMouseListener(new java.awt.event.MouseAdapter() {
+ 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                txtAreaChat2.setText("");
+                txtMsg2.setText("");
+                if(chat!=null){
+                    try {
+                        chat.stopConecction();
+                    } catch (JMSException ex) {
+                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                tblEjemploMouseClickedChatGrupal(e);
+            }
+        });
+    }
+    
+    private String nombreSalaChatGrupal;
+    private void tblEjemploMouseClickedChatGrupal(java.awt.event.MouseEvent evt) {
+        String codigo,nombre,nombreSala;
+        int row = jTableSalasGrupal.rowAtPoint(evt.getPoint());
+        nombreSalaChatGrupal = modelChatGrupal.getValueAt(row,0).toString();
+        
+        llenarTAbleParticipantes(jTableSalaGrupoParticipantes);
+        
+        System.out.println(nombreSalaChatGrupal);
+        txtMsg2.enableInputMethods(true);
+        btnEnviar2.enableInputMethods(true);
+        btnAgregarParticipantes.enableInputMethods(true);
+        btnAgregarParticipantes1.enableInputMethods(true);
+        txtAgregarParticipante.enableInputMethods(true);
+        //txtMsg.enableInputMethods(true);
+        //btnEnviar.enableInputMethods(true);
+        try {    
+            int idrom = buscarRom(nombreSalaChatGrupal);
+            chat = new Chat(txtMsg2, txtAreaChat2, IdUsuario, btnEnviar2, nombreSalaChatGrupal,idrom);
+        } catch (JMSException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     
     /////////////////////////////////////////////////////////////////////////////////////////////////
     private DefaultTableModel modelPArticipantes;
